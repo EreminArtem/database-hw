@@ -29,12 +29,12 @@ VALUES ('Rick', 'Sanchez');
 
 START TRANSACTION;
 
+INSERT INTO sample.users
 SELECT *
 FROM shop.users
 WHERE id = '1';
 
-INSERT INTO sample.users
-SELECT *
+DELETE
 FROM shop.users
 WHERE id = '1';
 
@@ -171,13 +171,16 @@ GRANT SELECT ON shop.username TO user_read;
 USE sample;
 
 CREATE FUNCTION hello()
-    RETURNS VARCHAR(255) DETERMINISTIC
+    RETURNS VARCHAR(255) NO SQL
 BEGIN
-    IF (NOW() BETWEEN CAST('06:00:00' AS TIME) AND CAST('12:00:00' AS TIME)) THEN
-        RETURN 'Доброе утро';
-    ELSE
-        RETURN 'Добрый вечер';
-    END IF;
+    DECLARE now TIME DEFAULT NOW();
+    CASE
+        WHEN now BETWEEN CAST('06:00:00' AS TIME) AND CAST('12:00:00' AS TIME) THEN RETURN 'Доброе утро';
+        WHEN now BETWEEN CAST('06:00:00' AS TIME) AND CAST('12:00:00' AS TIME) THEN RETURN 'Доброе утро';
+        WHEN now BETWEEN CAST('12:00:00' AS TIME) AND CAST('18:00:00' AS TIME) THEN RETURN 'Добрый день';
+        WHEN now BETWEEN CAST('18:00:00' AS TIME) AND CAST('00:00:00' AS TIME) THEN RETURN 'Добрый вечер';
+        WHEN now BETWEEN CAST('00:00:00' AS TIME) AND CAST('06:00:00' AS TIME) THEN RETURN 'Доброй ночи';
+    END CASE;
 END;
 
 SELECT hello();
